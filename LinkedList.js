@@ -33,11 +33,36 @@ function LinkedList() {
     };
 
     // 向链表的特定位置插入一个新的项
-    this.insert = function(position, element){};
+    this.insert = function(position, element){
+        // 坚持越界值
+        if (position >=0 && position <= length) {
+            let node = new Node(element);
+            let current = head;
+            let previous;
+            let index = 0;
+
+            if(position === 0) {
+                node.next = current;
+                head = node;
+            } else {
+                while(index++ < position) {
+                    previous = current;
+                    current = current.next;
+                }
+                node.next = current;
+                previous.next = node;
+            }
+            length++;
+            return true;
+        } else {
+            return false;
+        }
+    };
 
     // 从链表移除一项 
     this.remove = function(element){
-
+        let index = this.indexOf(element);
+        return this.removeAt(index);
     };
 
     // 从列表特定位置移除一项
@@ -69,21 +94,62 @@ function LinkedList() {
     };
 
     // 返回当前项在链表中的索引
-    this.indexOf = function(element){};
+    this.indexOf = function(element){
+        let current = head;
+        let index = 0;
+
+        while(current) {
+            if(element === current.element) {
+                return index;
+            }
+            index++;
+            current = current.next;
+        }
+        return -1;
+    };
 
 
     // 判断链表是否不包含任何元素
-    this.isEmpty = function(){};
+    this.isEmpty = function(){
+        return length === 0;
+    };
 
     // 返回链表中包含的元素个数
-    this.size = function(){};
+    this.size = function(){
+        return length;
+    };
 
     // 输出元素的值
-    this.toString = function(){};
+    this.toString = function(){
+        let current = head;
+        string = '';
+        while(current) {
+            string += current.element + (current.next ? '->' : '');
+            current = current.next;
+        }
+        return string;
+    };
+
+    // 获取第一个节点
+    this.getHead = function() {
+        return head;
+    }
 }
+
+
+// test：
 
 let list = new LinkedList();
 list.append(19);
 list.append(11);
-list.append(13);
-list.removeAt(4)
+list.insert(1, 221);
+console.log(list.toString()); // 19->221->11
+list.insert(2, 33221);
+console.log(list.toString()) // 19->221->33221->11
+list.remove(11)
+console.log(list.toString()) // 19->221->33221
+console.log(list.indexOf(19)); // 0
+console.log(list.getHead()); 
+// Node {
+//     element: 19,
+//     next: Node { element: 221, next: Node { element: 33221, next: null } } }
